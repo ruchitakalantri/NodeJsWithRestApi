@@ -4,19 +4,18 @@ const { validationResult } = require('express-validator/check');
 const Post = require('../models/post');
 
 exports.getPosts = (req , res , next) => {
-    //return data : return response
-    res.status(200).json({
-        posts : [{
-            _id : 1 ,
-            title : 'First Post' ,
-            content : 'This is first post!!' ,
-            imageUrl : 'images/ring1.jpeg' ,
-            creator : {
-                name : 'Ruchita'
-            } ,
-            createdAt : new Date()
-        }]
-    });
+    // FETCH ACTUAL POST
+    Post
+        .find()
+        .then(posts => {
+            res.status(200).json({message : 'Fetched Post Success' , posts : posts})
+        })
+        .catch( err => {
+            if(!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
+        });
 };
 
 exports.createPost = (req,res,next) => {
@@ -52,7 +51,27 @@ exports.createPost = (req,res,next) => {
             }
             next(err);
         })
-
-  
-
 };
+
+exports.getPost = (req , res , next) => {
+    const postId = req.params.postId;
+    //find post of that id from database
+    Post
+        .findById(postId) 
+        .then(post => {
+            if(!post) {
+                const error = new Error('Could not find post');
+                error.statusCode = 404;
+                throw error; // with this throw we end up in catch block
+            }
+            res.status(200).json({message : 'Post Fetched' , post : post});
+
+
+        })
+        .catch(err => {
+            if(!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
+        })
+}
