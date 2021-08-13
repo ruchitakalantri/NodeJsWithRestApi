@@ -11,7 +11,6 @@ app.use(bodyParser.json()); // application/json
 
 // add headers for server side to solve CORS error
 app.use((req , res , next) => {
-
     // modify and add new header
     res.setHeader('Access-Control-Allow-Origin' , '*');
     res.setHeader('Access-Control-Allow-Methods' , 'GET,POST,PUT,PATCH,DELETE');
