@@ -1,3 +1,5 @@
+const path = require('path');
+
 const express = require('express');
 
 const mongoose = require('mongoose');
@@ -12,6 +14,10 @@ const app = express();
 // app.use(bodyParser.urlencoded) // good for x-www-form-uelencoded
 app.use(bodyParser.json()); // application/json
 
+//middleware for image request
+// path : to construct absoulute path
+app.use('/images' , express.static(path.join(__dirname , 'images')));
+
 // add headers for server side to solve CORS error
 app.use((req , res , next) => {
     // modify and add new header
@@ -22,6 +28,14 @@ app.use((req , res , next) => {
 });
 
 app.use('/feed' , feedRoutes);
+
+// error handeling middleware
+app.use((error, req , res, next) => {
+    console.log(error);
+    const status = error.statusCode || 500 ;
+    const message = error.message; 
+    res.status(status).json({ message : message});
+})
 
 // establish a connection
 mongoose
