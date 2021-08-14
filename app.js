@@ -4,19 +4,59 @@ const express = require('express');
 
 const mongoose = require('mongoose');
 
+const multer = require('multer');
+
 const bodyParser = require('body-parser');
 
 const feedRoutes = require('./routes/feed');
 
 const app = express();
 
+//configure file storage with multer disk storage
+const fileStorage = multer.diskStorage ({
+    // file destination -- cb: callback
+    // in cb first argument is error : which is null
+    destination : (req , file , cb) => { 
+        cb(null , 'images');
+    } ,
+    // filename : how the file should be anme
+    filename : (req , file , cb) => {
+        // date-originalFilename
+        cb(null , new Date().toISOString() + '-' + file.originalname);
+    }
+});
+
+// fileFilter
+const fileFilter = (req , file , cb ) => {
+    if( file.mimetype === 'image/png' || 
+        file.minetype === 'image/jpg' || 
+        file.minetype === 'image/jpeg') {
+            // valid file
+            cb( null , true);
+    }
+    else {
+        console.log('INVALID')
+        // in-valid file
+        cb(null, false);
+    }
+}
+
 // middleware to parse incoming data
 // app.use(bodyParser.urlencoded) // good for x-www-form-uelencoded
 app.use(bodyParser.json()); // application/json
 
+
+
+// for parsing multipart/form-data
+// register multer .. for single file 
+app.use(
+    multer({ storage: fileStorage, fileFilter: fileFilter }).single('image')
+  );
+
 //middleware for image request
 // path : to construct absoulute path
-app.use('/images' , express.static(path.join(__dirname , 'images')));
+app.use('/images', express.static(path.join(__dirname, 'images')));
+
 
 // add headers for server side to solve CORS error
 app.use((req , res , next) => {
