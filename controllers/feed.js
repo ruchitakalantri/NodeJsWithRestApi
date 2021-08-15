@@ -107,6 +107,8 @@ exports.getPost = (req , res , next) => {
 };
 
 exports.updatePost = (res , req , next) => {
+    const postId = req.params.postId;
+
     const errrors = validationResult(req);
     if(!errrors.isEmpty) {
         const error = new Error('Validation Failed , entered data is incorrect');
@@ -114,13 +116,13 @@ exports.updatePost = (res , req , next) => {
         throw error;
     }
 
-    const postId = req.body.postId;
     const title = req.body.title;
     const content = req.body.content;
     let imageUrl = req.body.image;
 
     if(req.file) {
         imageUrl = req.file.path;
+        console.log('RUCHITA' + imageUrl)
     }
     if(!imageUrl) {
         const error = new Error('No File Picked');

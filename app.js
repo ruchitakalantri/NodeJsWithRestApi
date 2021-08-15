@@ -10,6 +10,8 @@ const bodyParser = require('body-parser');
 
 const feedRoutes = require('./routes/feed');
 
+const authRoutes = require('./routes/auth');
+
 const app = express();
 
 //configure file storage with multer disk storage
@@ -29,8 +31,8 @@ const fileStorage = multer.diskStorage ({
 // fileFilter
 const fileFilter = (req , file , cb ) => {
     if( file.mimetype === 'image/png' || 
-        file.minetype === 'image/jpg' || 
-        file.minetype === 'image/jpeg') {
+        file.mimetype === 'image/jpg' || 
+        file.mimetype === 'image/jpeg') {
             // valid file
             cb( null , true);
     }
@@ -68,6 +70,8 @@ app.use((req , res , next) => {
 });
 
 app.use('/feed' , feedRoutes);
+
+app.use('/auth' , authRoutes);
 
 // error handeling middleware
 app.use((error, req , res, next) => {

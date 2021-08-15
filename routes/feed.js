@@ -1,7 +1,6 @@
 const express = require('express');
 const {body} = require('express-validator/check');
 const multer = require('multer');
-const upload = multer();
 
 
 const feedController = require('../controllers/feed');
@@ -21,14 +20,15 @@ router.post(
             body('content')
                 .trim()
                 .isLength({min : 5})
-        ] ,
+        ],
+        
     feedController.createPost
 );
 
-// route for singel post
+// route for single post
 router.get('/post/:postId' , feedController.getPost);
 
-// replace 
+// replace old post with new one
 // can add request body
 router.put('/post/:postId' , [
         body('title')
