@@ -36,8 +36,43 @@ exports.signup = (req, res, next) => {
             }
             next(err);
         });
+};
 
+exports.login = (req , res , next) => {
 
-    //start storing into database
+    const email = req.body.email ;
+    const password = req.body.password;
+
+    // email exist or not
+    User
+        .findOne({email : email})
+        .then(user => {
+            if(!user) {
+                //user not define
+                const error = new Error('User with Email Not Found!');
+                error.statusCode = 401;
+                throw error;
+            }
+            // have email
+            // validate password
+            loadUser = user;
+            bcrypt.compare(password , user.password);
+        })
+        .then(isEqual => {
+            if(!isEqual) {
+                //wrong password
+                const error = new Error('Wrong Password!');
+                error.statusCode = 401;
+                throw error;
+            }
+            // paassword correct
+            //generate JSON Web Token (JWT)
+        })
+        .catch(err => {
+            if(!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
+        });
 
 }
