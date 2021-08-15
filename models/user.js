@@ -1,34 +1,33 @@
-
-
-const { strict } = require('assert/strict');
-const mongoose = require('mongoose');
+const { strict } = require("assert/strict");
+const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-    // how user should look like
+  // how user should look like
 
-    email : {
-        type : String,
-        required : true
-    } ,
-    password : {
-        type : String,
-        required : true
-    } ,
-    name : {
-        type : String,
-        required : true
-    } ,
-    status : {
-        type : String,
-        default : 'I am New!'
+  email: {
+    type: String,
+    required: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  name: {
+    type: String,
+    required: true,
+  },
+  status: {
+    type: String,
+    default: "I am New!",
+  },
+  posts: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Post",
     },
-    posts : [{
-        type : Schema.Types.ObjectId,
-        ref : 'Post'
-    }]
-
+  ],
 });
 
-module.exports = mongoose.model('User' , userSchema);
+module.exports = mongoose.model("User", userSchema);
