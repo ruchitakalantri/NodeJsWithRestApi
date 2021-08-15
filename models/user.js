@@ -3,7 +3,7 @@
 const { strict } = require('assert/strict');
 const mongoose = require('mongoose');
 
-const Schema = momgoose.Schema;
+const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
     // how user should look like
@@ -22,7 +22,7 @@ const userSchema = new Schema({
     } ,
     status : {
         type : String,
-        required : true
+        default : 'I am New!'
     },
     posts : [{
         type : Schema.Types.ObjectId,
