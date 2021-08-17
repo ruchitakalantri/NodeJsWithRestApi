@@ -22,6 +22,7 @@ exports.getPosts = async (req, res, next) => {
     // FETCH ACTUAL POST
     const posts = await Post.find()
       .populate("creator")
+      .sort({createdAt : -1})
       .skip((currentPage - 1) * perPage)
       .limit(perPage);
 
