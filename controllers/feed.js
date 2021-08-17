@@ -21,6 +21,7 @@ exports.getPosts = async (req, res, next) => {
 
     // FETCH ACTUAL POST
     const posts = await Post.find()
+      .populate("creator")
       .skip((currentPage - 1) * perPage)
       .limit(perPage);
 
@@ -69,7 +70,16 @@ exports.createPost = async (req, res, next) => {
     user.posts.push(post);
     await user.save();
     //inform all user
-    io.getIO().emit("posts", { action: "create", post: post });
+    io.getIO().emit("posts", {
+      action: "create",
+      post: {
+        ...post._doc,
+        creator: {
+          _id: req.userId,
+          name: user.name,
+        },
+      },
+    });
     res.status(201).json({
       message: "post data successfully",
       post: post,
