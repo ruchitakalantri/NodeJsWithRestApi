@@ -68,7 +68,6 @@ app.use((req, res, next) => {
 });
 
 app.use("/feed", feedRoutes);
-
 app.use("/auth", authRoutes);
 
 // error handeling middleware
@@ -85,6 +84,13 @@ mongoose
   .connect("mongodb+srv://ruchita:saurabh@cluster0.t1cyv.mongodb.net/messages")
   .then((result) => {
     //start node server
-    app.listen(8080);
+    const server = app.listen(8080);
+    //setup socket.io connection
+    // use our http server to extablish socket io connection
+    const io = require("socket.io")(server);
+    io.on("connection", (socket) => {
+      console.log("ruchita");
+      console.log("Client Connected");
+    });
   })
   .catch((err) => console.log(err));
