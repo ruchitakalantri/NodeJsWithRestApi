@@ -4,6 +4,8 @@ const multer = require("multer");
 
 const { validationResult } = require("express-validator/check");
 
+const io = require("../socket");
+
 const Post = require("../models/post");
 const User = require("../models/user");
 
@@ -66,6 +68,8 @@ exports.createPost = async (req, res, next) => {
     const user = await User.findById(req.userId);
     user.posts.push(post);
     await user.save();
+    //inform all user
+    io.getIO().emit("posts", { action: "create", post: post });
     res.status(201).json({
       message: "post data successfully",
       post: post,

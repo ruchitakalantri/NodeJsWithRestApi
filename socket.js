@@ -10,10 +10,10 @@ module.exports = {
     });
     return io;
   },
-  getIO : () => {
-      if(!io) {
-         throw new Error ('Socket.io not initalized') 
-      }
-      return io;
-  }
+  getIO: () => {
+    if (!io) {
+      throw new Error("Socket.io not initalized");
+    }
+    return io;
+  },
 };
