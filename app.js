@@ -87,9 +87,13 @@ mongoose
     const server = app.listen(8080);
     //setup socket.io connection
     // use our http server to extablish socket io connection
-    const io = require("socket.io")(server);
+    const io = require("socket.io")(server , {
+      cors: {
+        origin: "http://localhost:3000",
+        credentials: true
+      }
+    });
     io.on("connection", (socket) => {
-      console.log("ruchita");
       console.log("Client Connected");
     });
   })
